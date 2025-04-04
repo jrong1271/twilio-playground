@@ -1,0 +1,26 @@
+/* index.css */
+.block-header {
+  @apply bg-teal-900 text-white p-2 rounded-t;
+}
+
+.btn-action {
+  @apply bg-teal-500 text-white hover:bg-teal-400;
+}
+.btn-cancel {
+  @apply bg-gray-200 text-white hover:bg-gray-400;
+}
+
+.block-content {
+  @apply font-light;
+}
+
+.table-header {
+  @apply grid grid-cols-3 bg-slate-500 text-white gap-1 p-2 text-bold;
+}
+.table-content {
+  @apply grid grid-cols-3 hover:text-slate-500 text-center odd:bg-gray-100 even:bg-white rounded p1 font-light;
+}
+
+.panel {
+  @apply bg-white shadow-md rounded-lg;
+}
