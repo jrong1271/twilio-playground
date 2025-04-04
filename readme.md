@@ -2,14 +2,15 @@
 
 #### Configure
 
-Sign up for a twilio account, purchase a phone number
+Sign up for a twilio account and purchase a phone number.
 
-- Write your account credential to your .env file
-  ```
-  TWILIO_ACCOUNT_SID=***YOUR ACCOUNT SID**
-  TWILIO_AUTH_TOKEN=***YOUR AUTH TOKEN***
-  TWILIO_PHONE_NUMBER=***YOUR PHONE NUMBER***
-  ```
+Then, Write your account credential to the .env file
+
+```
+TWILIO_ACCOUNT_SID=***YOUR ACCOUNT SID**
+TWILIO_AUTH_TOKEN=***YOUR AUTH TOKEN***
+TWILIO_PHONE_NUMBER=***YOUR PHONE NUMBER***
+```
 
 ---
 
@@ -35,8 +36,10 @@ Run these command in the root directory
 
 - ToDo:
   - Optimization
-    - Compress all js in production build, apply treeshaking
-    - Test performance number from optimization
+    - Compress all js in production build, reduce bundle size with treeshaking, lazy load, memoization
+    - Use react profiler and lighthouse to identify performance bottlenecks
+    - server side rendering SSR using Next.js
+    - purge css in production build
   - UI
     - Add login and logout
     - For logged in user
