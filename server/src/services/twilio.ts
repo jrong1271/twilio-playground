@@ -118,7 +118,9 @@ export default async function (app: FastifyInstance) {
       // Convert to local date string (e.g., "2024-04-06")
       const groupedCalls = calls.reduce(
         (acc, call) => {
-          const date = new Date(call.startTime).toLocaleString().split(", ")[0]; // "YYYY-MM-DD"
+          const [date, time] = new Date(call.startTime)
+            .toLocaleString()
+            .split(", ");
 
           if (!acc[date]) {
             acc[date] = [];
@@ -127,7 +129,7 @@ export default async function (app: FastifyInstance) {
           acc[date].push({
             sid: call.sid,
             toFormatted: maskPhone(call.toFormatted),
-            formattedTime: new Date(call.startTime).toLocaleString(),
+            formattedTime: time,
             formattedPrice:
               Math.abs(parseFloat(call.price)).toPrecision(2) +
               " " +
