@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import twilio from "twilio";
 import dotenv from "dotenv";
-import _ from "lodash";
+import _, { groupBy } from "lodash";
 
 dotenv.config();
 
@@ -73,14 +73,40 @@ export default async function (app: FastifyInstance) {
       tags: ["Call History"],
       response: {
         200: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              sid: { type: "string" },
-              toFormatted: { type: "string" },
-              formattedTime: { type: "string" },
-              formattedPrice: { type: "string" },
+          type: "object",
+          description: "Grouped call history, keyed by date (YYYY-MM-DD)",
+          additionalProperties: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                sid: {
+                  type: "string",
+                  description: "Unique identifier for the call",
+                  example: "CA0e4bd060e090d4429a92fdabd64702fe",
+                },
+                toFormatted: {
+                  type: "string",
+                  description: "The phone number formatted with masking",
+                  example: "***-***-0256",
+                },
+                formattedTime: {
+                  type: "string",
+                  description: "The date and time when the call occurred",
+                  example: "4/4/2025, 8:01:15 PM",
+                },
+                formattedPrice: {
+                  type: "string",
+                  description: "The cost of the call",
+                  example: "0.014 USD",
+                },
+              },
+              required: [
+                "sid",
+                "toFormatted",
+                "formattedTime",
+                "formattedPrice",
+              ],
             },
           },
         },
@@ -88,22 +114,31 @@ export default async function (app: FastifyInstance) {
     },
     handler: async (request, reply) => {
       const calls = await client.calls.list({ limit: 10 });
-      const updatedList = calls.map((call) => {
-        return {
-          sid: call.sid,
-          toFormatted: maskPhone(call.toFormatted),
-          formattedTime: new Date(call.startTime).toLocaleString(),
-          formattedPrice:
-            Math.abs(parseFloat(call.price)).toPrecision(2) +
-            " " +
-            call.priceUnit,
-        };
-      });
-      reply.send(updatedList);
+
+      // Convert to local date string (e.g., "2024-04-06")
+      const groupedCalls = calls.reduce(
+        (acc, call) => {
+          const date = new Date(call.startTime).toLocaleString().split(", ")[0]; // "YYYY-MM-DD"
+
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+
+          acc[date].push({
+            sid: call.sid,
+            toFormatted: maskPhone(call.toFormatted),
+            formattedTime: new Date(call.startTime).toLocaleString(),
+            formattedPrice:
+              Math.abs(parseFloat(call.price)).toPrecision(2) +
+              " " +
+              call.priceUnit,
+          }); // Add the call to the corresponding date group
+          return acc;
+        },
+        {} as Record<string, any>
+      );
+
+      reply.send(groupedCalls);
     },
   });
-
-  // app.get("/", async (_, reply) => {
-  //   reply.send({ msg: "hello" });
-  // });
 }

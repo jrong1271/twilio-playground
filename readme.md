@@ -1,6 +1,8 @@
 ### Twilio Playgound<img src="public/twilios.jpg" width="25px"></img>
 
-#### Configure
+<img src="public/demo.png" width="400px"></img>
+
+#### Requirement
 
 Sign up for a twilio account and purchase a phone number.
 
@@ -26,11 +28,12 @@ Run these command in the root directory
 - Features:
   - UI (client)
     - Make call
-    - Display call history
+    - Display call history grouped by date
   - Backend (sever)
     - Use Swagger UI to document and test api endpoints
     - Integrate twilio service
     - Transform sensitive data (masking phone number)
+    - Transform call histories, grouped/keyed by date (YYYY-MM-DD), also update swagger schema
 
 ---
 
@@ -47,6 +50,5 @@ Run these command in the root directory
       - Add a page for user to create customize template
       - Add a page to display recorded calls
   - Backend
-    - Group call history date for readability
     - Display templates list created by current user
     - Add another endpoint to display recorded calls

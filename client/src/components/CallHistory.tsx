@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import React from "react";
 
 export default function CallHistory() {
-  const [calls, setCalls] = useState([]);
+  const [groupedCalls, setGroupedCalls] = useState<
+    Record<
+      string,
+      {
+        sid: string;
+        toFormatted: string;
+        formattedPrice: string;
+        formattedTime: string;
+      }[]
+    >
+  >({});
 
   useEffect(() => {
     async function fetchHistory() {
       await axios.get("/api/history").then((res) => {
-        setCalls(res.data);
+        setGroupedCalls(res.data);
       });
     }
     fetchHistory();
@@ -22,12 +33,19 @@ export default function CallHistory() {
           <span className="text-center">Cost</span>
           <span className="text-center">Created</span>
         </div>
-        {calls.map((call: any) => (
-          <div key={call.sid} className="table-content">
-            <span>{call.toFormatted}</span>
-            <span>{call.formattedPrice}</span>
-            <span>{call.formattedTime}</span>
-          </div>
+        {Object.entries(groupedCalls).map(([date, calls]) => (
+          <React.Fragment key={date}>
+            <div className="col-span-3 font-bold bg-gray-100 py-2 px-4 rounded">
+              {date}
+            </div>
+            {calls.map((call) => (
+              <div key={call.sid} className="table-content">
+                <span>{call.toFormatted}</span>
+                <span>{call.formattedPrice}</span>
+                <span>{call.formattedTime}</span>
+              </div>
+            ))}
+          </React.Fragment>
         ))}
       </div>
     </div>

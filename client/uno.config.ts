@@ -7,7 +7,5 @@ export default defineConfig({
   transformers: [
     transformerDirectives(), // 👈 enables @apply and @screen
   ],
-  shortcuts: {
-    btn: "px-5 py-2 rounded transition duration-200 cursor-pointer m-2",
-  },
+  shortcuts: {},
 });
