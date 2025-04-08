@@ -20,7 +20,7 @@
   @apply grid grid-cols-3 bg-teal-600 text-white gap-1 p-2 text-bold;
 }
 .table-content {
-  @apply grid grid-cols-3 hover:text-slate-500 text-center rounded p1 font-light;
+  @apply grid grid-cols-3 text-center rounded p1 font-light;
 }
 
 .panel {

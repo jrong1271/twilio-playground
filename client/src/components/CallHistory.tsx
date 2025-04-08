@@ -8,7 +8,7 @@ export default function CallHistory() {
       string,
       {
         sid: string;
-        toFormatted: string;
+        fromFormatted: string;
         formattedPrice: string;
         formattedTime: string;
       }[]
@@ -16,12 +16,14 @@ export default function CallHistory() {
   >({});
 
   useEffect(() => {
-    async function fetchHistory() {
-      await axios.get("/api/history").then((res) => {
+    axios
+      .get("/api/history")
+      .then((res) => {
         setGroupedCalls(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching call history:", error);
       });
-    }
-    fetchHistory();
   }, []);
 
   return (
@@ -29,18 +31,18 @@ export default function CallHistory() {
       <div className="block-header">Call History</div>
       <div className="block-content">
         <div className="table-header">
-          <span className="text-center">Dial Number</span>
+          <span className="text-center">From Number</span>
           <span className="text-center">Created</span>
           <span className="text-center">Cost</span>
         </div>
         {Object.entries(groupedCalls).map(([date, calls]) => (
           <React.Fragment key={date}>
-            <div className="col-span-3 bg-gray-100 py-2 px-4 rounded text-center">
-              {date}
+            <div className="col-span-3 bg-gray-100 p-3 rounded text-center">
+              <span className="p-2 font-bold">{date}</span>
             </div>
             {calls.map((call) => (
               <div key={call.sid} className="table-content">
-                <span>{call.toFormatted}</span>
+                <span>{call.fromFormatted}</span>
                 <span>{call.formattedTime}</span>
                 <span>{call.formattedPrice}</span>
               </div>

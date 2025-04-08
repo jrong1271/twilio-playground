@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import twilio from "twilio";
 import dotenv from "dotenv";
-import _, { groupBy } from "lodash";
+import _ from "lodash";
 
 dotenv.config();
 
@@ -85,7 +85,7 @@ export default async function (app: FastifyInstance) {
                   description: "Unique identifier for the call",
                   example: "CA0e4bd060e090d4429a92fdabd64702fe",
                 },
-                toFormatted: {
+                fromFormatted: {
                   type: "string",
                   description: "The phone number formatted with masking",
                   example: "***-***-0256",
@@ -103,7 +103,7 @@ export default async function (app: FastifyInstance) {
               },
               required: [
                 "sid",
-                "toFormatted",
+                "fromFormatted",
                 "formattedTime",
                 "formattedPrice",
               ],
@@ -113,8 +113,7 @@ export default async function (app: FastifyInstance) {
       },
     },
     handler: async (request, reply) => {
-      const calls = await client.calls.list({ limit: 10 });
-
+      const calls = await client.calls.list({ limit: 20 });
       // Convert to local date string (e.g., "2024-04-06")
       const groupedCalls = calls.reduce(
         (acc, call) => {
@@ -128,7 +127,7 @@ export default async function (app: FastifyInstance) {
 
           acc[date].push({
             sid: call.sid,
-            toFormatted: maskPhone(call.toFormatted),
+            fromFormatted: maskPhone(call.fromFormatted),
             formattedTime: time,
             formattedPrice:
               Math.abs(parseFloat(call.price)).toPrecision(2) +
